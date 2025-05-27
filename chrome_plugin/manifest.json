@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "English Lesson Plan Generator",
+  "version": "1.0",
+  "description": "Scrape web content and generate English lesson plans",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+} 
