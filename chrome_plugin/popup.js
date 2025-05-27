@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Function to send content to backend
   const sendToBackend = async (content) => {
     try {
-      const response = await fetch('YOUR_BACKEND_URL/api/process-content', {
+      const response = await fetch('https://browser-plugin-lesson-generator.onrender.com/api/process-content', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
