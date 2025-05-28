@@ -10,7 +10,7 @@ load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["chrome-extension://hmoamkjgdbnoehccpmgdmdpnfpmffbia"])
 
 def extract_metadata_and_content(html: str):
     soup = BeautifulSoup(html, "html.parser")
