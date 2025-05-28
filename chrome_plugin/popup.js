@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const sendToBackend = async (content) => {
     try {
       const response = await fetch('https://browser-plugin-lesson-generator.onrender.com/api/process-content', {
+      // const response = await fetch('http://localhost:5001/api/process-content', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

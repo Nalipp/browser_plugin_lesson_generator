@@ -39,10 +39,10 @@ def test():
 @app.route("/api/process-content", methods=["POST"])
 def process_content():
     data = request.json
-    html = data.get("html", "")
-    if not html:
-        return jsonify({"error": "No HTML provided"}), 400
-    content = extract_metadata_and_content(html)
+    mainContent = data.get("mainContent", "")
+    if not mainContent:
+        return jsonify({"error": "No content provided"}), 400
+    content = extract_metadata_and_content(mainContent)
     title = content["metadata"]["title"]
     main_content = content["mainContent"]
     prompt = llm_coach_prompt_generator(title, main_content)
