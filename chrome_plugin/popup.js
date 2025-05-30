@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-  const REQUEST_URL = 'http://localhost:5001/api/process-content'; // DEV 
-  // const REQUEST_URL = 'https://browser-plugin-lesson-generator.onrender.com/api/process-content'; // PROD 
+  // const REQUEST_URL = 'http://localhost:5001/api/process-content'; // DEV
+  const REQUEST_URL = 'https://browser-plugin-lesson-generator.onrender.com/api/process-content'; // PROD
     
   const scrapeButton = document.getElementById('scrapeButton');
   const statusDiv = document.getElementById('status');
