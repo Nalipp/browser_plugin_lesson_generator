@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-  // const REQUEST_URL = 'http://localhost:5001/api/process-content'; // DEV 
-  const REQUEST_URL = 'https://browser-plugin-lesson-generator.onrender.com/api/process-content'; // PROD 
+  const REQUEST_URL = 'http://localhost:5001/api/process-content'; // DEV 
+  // const REQUEST_URL = 'https://browser-plugin-lesson-generator.onrender.com/api/process-content'; // PROD 
     
   const scrapeButton = document.getElementById('scrapeButton');
   const statusDiv = document.getElementById('status');
@@ -20,16 +20,16 @@ document.addEventListener('DOMContentLoaded', function () {
   let progress = 0;
   let progressStartTime = null;
   const PROGRESS_MAX = 95;
-  const PROGRESS_DURATION = 40000;
+  const PROGRESS_DURATION = 20000;
 
   const progressMilestones = [
-    { percent: 5, time: 4000 },
-    { percent: 12, time: 8000 },
-    { percent: 22, time: 13000 },
-    { percent: 38, time: 19000 },
-    { percent: 55, time: 25000 },
-    { percent: 70, time: 31000 },
-    { percent: 85, time: 37000 },
+    { percent: 5, time: 2000 },
+    { percent: 12, time: 4000 },
+    { percent: 22, time: 7000 },
+    { percent: 38, time: 10000 },
+    { percent: 55, time: 12000 },
+    { percent: 70, time: 16000 },
+    { percent: 85, time: 18000 },
     { percent: PROGRESS_MAX, time: PROGRESS_DURATION }
   ];
 
@@ -86,14 +86,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 100);
   };
 
-  const finishProgressBar = () => {
+  const finishProgressBar = async () => {
     clearInterval(progressInterval);
     progressBar.style.width = '100%';
-    setTimeout(() => {
-      progressContainer.style.display = 'none';
-      progressBar.style.width = '0%';
-      progressStartTime = null;
-    }, 1000);
+    // Wait for the transition to finish (0.3s from CSS, add a little buffer)
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    progressContainer.style.display = 'none';
+    progressBar.style.width = '0%';
+    progressStartTime = null;
   };
 
   const sendToBackend = async (content) => {
@@ -148,19 +148,22 @@ document.addEventListener('DOMContentLoaded', function () {
         processingTimestamp: new Date().toISOString(),
       });
 
-      chrome.tabs.create({ url: chrome.runtime.getURL('result.html') });
-
       stopRotatingInstructions();
       fadeStatus('Content processed successfully!');
-      finishProgressBar();
+      await finishProgressBar();
+      chrome.tabs.create({ url: chrome.runtime.getURL('result.html') });
       scrapeButton.disabled = false;
     } catch (error) {
       stopRotatingInstructions();
-      finishProgressBar();
+      await finishProgressBar();
       scrapeButton.disabled = false;
       console.error('Error during scraping:', error);
       fadeStatus('Error: ' + error.message);
     }
+  });
+
+  document.getElementById('print-btn').addEventListener('click', () => {
+    window.open(chrome.runtime.getURL('print.html'), '_blank');
   });
 });
 

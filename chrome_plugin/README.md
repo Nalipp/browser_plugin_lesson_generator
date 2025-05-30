@@ -29,6 +29,7 @@ A Chrome extension that helps generate English lesson plans by scraping web cont
 
 ## Development
 
+IMPORTANT
 PROD and dEV mode are not automatic at this point
 Comment out the PROD url and uncomment DEV from popup.js
 The extension uses Chrome's Storage API to store scraped content locally. This data can be accessed later for generating lesson plans.

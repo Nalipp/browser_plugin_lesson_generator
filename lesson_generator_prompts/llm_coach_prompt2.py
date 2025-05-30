@@ -35,14 +35,14 @@ def llm_coach_prompt_generator(title: str, main_content: str) -> str:
                                 THIS IS JUST AN EXAMPLE DO NOT USE THAT TEXT PLEASE
                             )
                     questions: 
-                        a bank of 12 additional questions to keep the conversation flowing
+                        a bank of 10 additional questions to keep the conversation flowing
                         (questions example -> [
                                 "do you have a bucket list", "what places would you like to see most in the world", 
                                 "do you want to travel to the most iconic travel destinations in the world or do you like to go to places that are off the beaten path?"
                             ]
                         )
                     more_substantial_discussion_topics:
-                        8 more robust prompts to keep the conversation flowing. These are on the same toipc but can shift focus, 
+                        6 more robust prompts to keep the conversation flowing. These are on the same toipc but can shift focus, 
                         the main goal is to keep the conversation flowing regardless of the topic
                         (more_substantial_discussion_topics example -> 
                             ["Exploring the Norwegian Fjords is a dream for many. The majestic landscapes offer breathtaking views unlike any other. 
@@ -54,8 +54,9 @@ def llm_coach_prompt_generator(title: str, main_content: str) -> str:
                             ]
                         )
                     common_expresions: 
-                        a list of 5-10 idioms, common expressions, phrases etc that native english speakers use that may not be covered in text books. 
+                        THIS IS THE MOST IMPORTANT PART OF THE LESSON
                         MAKE SURE YOU DO NOT SKIP THIS PART PLEASE
+                        a list of 5 idioms, common expressions, phrases etc that native english speakers use that may not be covered in text books. 
                         The commone_expressions should try to get the user to use these expressions and learn them through repitition as much as possible
                         each common_expression should have a short description describing its meaning
                         This should return an array of strings NOT AN OBJECT please
@@ -68,10 +69,9 @@ def llm_coach_prompt_generator(title: str, main_content: str) -> str:
                             "A blessing or a curse: Something that has both good and bad effects."
                           ]
                         )
+                        REMEMBER TO ALWAYS INCLUDE A COMMON EXPRESSIONS PORTION PLEASE 
                     summary:
-                        a genral summary of the text, it should include key parts and can vary in lenght acording to the complexity of the topic but try to keep it as short as possible. 
-                        For example if the text is a 1000 words the summary could maybe be a 20th of that at 50. 5000 -> 250. 
-                        But use your descression. But here it the hard part. The summary should try its best to use the common_expressions that were generated above.
+                        a short summary of the text, it should include key parts and can vary in lenght acording to the complexity of the topic but try to keep it as short as possible. 
                         Assume that the user has NOT ACTUALLY READ THE TEXT. This may or may not be a requirement.
                         REMEMBER THE SHORTER THE BETTER!
         """

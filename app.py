@@ -74,7 +74,7 @@ def process_content():
     prompt = llm_coach_prompt_generator(title, main_content)
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4-turbo-preview",
+            model="gpt-4o",
             messages=[
                 {
                     "role": "system",

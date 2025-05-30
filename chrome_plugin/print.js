@@ -1,9 +1,8 @@
-// Load the lesson plan from chrome.storage.local and display it
 function renderLessonPlan(lessonPlanObj, url) {
   let html = '';
   if (url) {
-    html += `<div style="margin-bottom: 1em; font-size: 0.98em;">
-      <a href="${url}" target="_blank" rel="noopener" style="color:#1a7f5a; text-decoration:underline; font-weight:600;">Original article</a>
+    html += `<div style="margin-bottom: 1em; font-size: 0.98em; color:#444; word-break:break-all;">
+      <strong>Original article:</strong><br>${url}
     </div>`;
   }
   if (lessonPlanObj.title) html += `<h2>${lessonPlanObj.title}</h2>`;
@@ -35,8 +34,6 @@ function renderLessonPlan(lessonPlanObj, url) {
 
 document.addEventListener('DOMContentLoaded', function () {
   const lessonPlanDiv = document.getElementById('lesson-plan');
-  const printBtn = document.getElementById('print-btn');
-
   chrome.storage.local.get(['processedContent', 'scrapedContent'], (data) => {
     let url = undefined;
     if (data.processedContent && data.processedContent.url) {
@@ -46,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     if (data.processedContent && data.processedContent.lesson_plan) {
       let lessonPlanRaw = data.processedContent.lesson_plan;
-      // Remove markdown code block if present
       lessonPlanRaw = lessonPlanRaw.replace(/^```json\n|```$/g, '').trim();
       let lessonPlanObj;
       try {
@@ -56,14 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       lessonPlanDiv.innerHTML = renderLessonPlan(lessonPlanObj, url);
-      printBtn.style.display = 'inline-block';
+      setTimeout(() => window.print(), 500);
     } else {
       lessonPlanDiv.textContent = 'No lesson plan found.';
-      printBtn.style.display = 'none';
     }
   });
-
-  printBtn.addEventListener('click', () => {
-    window.open(chrome.runtime.getURL('print.html'), '_blank');
-  });
-});
+}); 
