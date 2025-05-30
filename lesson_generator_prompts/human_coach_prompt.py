@@ -54,5 +54,3 @@ llm_coach_prompt = f"""Create a comprehensive lesson plan based on the following
                         The commone_expressions should try to get the user to use these expressions and learn them through repitition as much as possible
                             (common_expresions example -> ["bucket list", "off the beten path"])
         """
-
-

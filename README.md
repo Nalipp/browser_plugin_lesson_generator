@@ -1,51 +1,3 @@
-# English Lesson Plan Generator Chrome Extension
-
-A Chrome extension that helps generate English lesson plans by scraping web content.
-
----
-
-## How It Works
-1. User clicks the extension popup and scrapes the current page
-2. Extension sends the scraped content to the backend (Render or local Flask)
-3. Backend generates a lesson plan using OpenAI and returns it
-4. Extension opens a new tab and displays the formatted lesson plan
-
-
-
-## Installation
-
-1. Clone this repository or download the files
-2. Open Chrome and go to `chrome://extensions/`
-3. Enable "Developer mode" in the top right
-4. Click "Load unpacked" and select the directory containing these files
-
-## Usage
-
-1. Click the extension icon in your Chrome toolbar
-2. Navigate to any webpage you want to use as source material
-3. Right click on popup for inspector tools
-4. Click the "Scrape Current Page" button
-5. The content will be saved locally in your browser
-
-## Development
-
-PROD and dEV mode are not automatic at this point
-Comment out the PROD url and uncomment DEV from popup.js
-The extension uses Chrome's Storage API to store scraped content locally. This data can be accessed later for generating lesson plans.
-
-## Files
-
-- `manifest.json`: Extension configuration
-- `popup.html`: Extension popup interface
-- `popup.js`: Extension functionality
-- `icons/`: Directory containing extension icons
-
-## Next Steps
-
-- Implement AI integration for lesson plan generation
-- Add content filtering options
-- Create a lesson plan viewer interface
-
 # Browser Plugin Lesson Generator
 
 This project is a Chrome extension that scrapes content from any website, sends it to a serverless backend (hosted on Render), and generates an AI-powered lesson plan using OpenAI. The lesson plan is then displayed in a new tab for easy viewing, copying, or downloading.
@@ -85,7 +37,7 @@ cd browser_plugin_lesson_generator
   ```bash
   python app.py
   ```
-  The backend will be available at `http://localhost:5001` by default.
+  The backend will be available at `http://localhost:10000` by default.
 
 ### 3. Chrome Extension Setup
 - Go to `chrome://extensions/` in Chrome
@@ -93,6 +45,31 @@ cd browser_plugin_lesson_generator
 - Click "Load unpacked" and select the `chrome_plugin` directory
 - Use the extension popup to scrape and generate lesson plans
 
+### 4. JavaScript Dev Tools (in `chrome_plugin` directory)
+- Install Node.js dependencies:
+  ```bash
+  cd chrome_plugin
+  npm install
+  ```
+- Format code:
+  ```bash
+  npm run format
+  ```
+- Lint code:
+  ```bash
+  npm run lint
+  ```
+
+### 5. Python Linting & Formatting (from project root)
+- Format code:
+  ```bash
+  black .
+  isort .
+  ```
+- Lint code:
+  ```bash
+  flake8
+  ```
 
 ---
 
@@ -135,7 +112,25 @@ cd browser_plugin_lesson_generator
 
 ---
 
+## How It Works
+1. User clicks the extension popup and scrapes the current page
+2. Extension sends the scraped content to the backend (Render or local Flask)
+3. Backend generates a lesson plan using OpenAI and returns it
+4. Extension opens a new tab and displays the formatted lesson plan
+
+---
+
 ## Deployment
 - Backend can be deployed to [Render](https://render.com/) as a web service
 - Set your `OPENAI_API_KEY` as an environment variable in Render
 - Update the extension's backend URL to your Render endpoint
+
+---
+
+## Contributing
+Pull requests and issues are welcome!
+
+---
+
+## License
+MIT 

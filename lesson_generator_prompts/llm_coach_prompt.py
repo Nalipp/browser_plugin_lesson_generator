@@ -52,4 +52,3 @@ def llm_coach_prompt_generator(title: str, main_content: str) -> str:
                         The commone_expressions should try to get the user to use these expressions and learn them through repitition as much as possible
                             (common_expresions example -> ["bucket list", "off the beten path"])
         """
-
