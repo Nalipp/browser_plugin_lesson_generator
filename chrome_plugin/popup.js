@@ -1,13 +1,105 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+  // const REQUEST_URL = 'http://localhost:5001/api/process-content'; // DEV 
+  const REQUEST_URL = 'https://browser-plugin-lesson-generator.onrender.com/api/process-content'; // PROD 
+    
   const scrapeButton = document.getElementById('scrapeButton');
   const statusDiv = document.getElementById('status');
+  const progressContainer = document.getElementById('progress-container');
+  const progressBar = document.getElementById('progress-bar');
 
+  const instructions = [
+    'Please stay on this browser tab while we generate your lesson',
+    'This may take a minute or two',
+    'I hope you are having a nice day',
+    'This lesson is going to be awesome',
+  ];
+  let instructionIndex = 0;
+  let instructionInterval = null;
+  let progressInterval = null;
+  let progress = 0;
+  let progressStartTime = null;
+  const PROGRESS_MAX = 95;
+  const PROGRESS_DURATION = 40000;
+
+  const progressMilestones = [
+    { percent: 5, time: 4000 },
+    { percent: 12, time: 8000 },
+    { percent: 22, time: 13000 },
+    { percent: 38, time: 19000 },
+    { percent: 55, time: 25000 },
+    { percent: 70, time: 31000 },
+    { percent: 85, time: 37000 },
+    { percent: PROGRESS_MAX, time: PROGRESS_DURATION }
+  ];
+
+  const fadeStatus = (text, callback) => {
+    statusDiv.style.opacity = 0;
+    setTimeout(() => {
+      statusDiv.textContent = text;
+      statusDiv.style.opacity = 1;
+      if (callback) callback();
+    }, 600);
+  };
+
+  const startRotatingInstructions = () => {
+    fadeStatus(instructions[instructionIndex]);
+    instructionInterval = setInterval(() => {
+      instructionIndex = (instructionIndex + 1) % instructions.length;
+      fadeStatus(instructions[instructionIndex]);
+    }, 3500);
+  };
+
+  const stopRotatingInstructions = () => {
+    clearInterval(instructionInterval);
+    instructionInterval = null;
+  };
+
+  const startProgressBar = () => {
+    progressContainer.style.display = 'block';
+    progress = 0;
+    progressBar.style.width = '0%';
+    let milestoneIndex = 0;
+    let lastTime = 0;
+    progressInterval = setInterval(() => {
+      const now = Date.now();
+      if (!progressStartTime) progressStartTime = now;
+      const elapsed = now - progressStartTime;
+      while (
+        milestoneIndex < progressMilestones.length - 1 &&
+        elapsed > progressMilestones[milestoneIndex + 1].time
+      ) {
+        milestoneIndex++;
+      }
+      const current = progressMilestones[milestoneIndex];
+      const next = progressMilestones[milestoneIndex + 1];
+      if (next) {
+        const localElapsed = elapsed - current.time;
+        const localDuration = next.time - current.time;
+        const localProgress = localElapsed / localDuration;
+        progress = current.percent + (next.percent - current.percent) * localProgress;
+      } else {
+        progress = PROGRESS_MAX;
+        clearInterval(progressInterval);
+      }
+      progressBar.style.width = progress + '%';
+    }, 100);
+  };
+
+  const finishProgressBar = () => {
+    clearInterval(progressInterval);
+    progressBar.style.width = '100%';
+    setTimeout(() => {
+      progressContainer.style.display = 'none';
+      progressBar.style.width = '0%';
+      progressStartTime = null;
+    }, 1000);
+  };
 
   const sendToBackend = async (content) => {
     try {
       const response = await fetch(
-          // 'http://localhost:5001/api/process-content', // DEV 
-          'https://browser-plugin-lesson-generator.onrender.com/api/process-content', // PROD
+        REQUEST_URL,
         {
           method: 'POST',
           headers: {
@@ -31,6 +123,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   scrapeButton.addEventListener('click', async () => {
     try {
+      scrapeButton.disabled = true;
+      startRotatingInstructions();
+      startProgressBar();
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
       const results = await chrome.scripting.executeScript({
@@ -46,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function () {
         url: tab.url,
       });
 
-      statusDiv.textContent = 'Processing content...';
       const processedContent = await sendToBackend(scrapedContent);
 
       await chrome.storage.local.set({
@@ -56,10 +150,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
       chrome.tabs.create({ url: chrome.runtime.getURL('result.html') });
 
-      statusDiv.textContent = 'Content processed successfully!';
+      stopRotatingInstructions();
+      fadeStatus('Content processed successfully!');
+      finishProgressBar();
+      scrapeButton.disabled = false;
     } catch (error) {
+      stopRotatingInstructions();
+      finishProgressBar();
+      scrapeButton.disabled = false;
       console.error('Error during scraping:', error);
-      statusDiv.textContent = 'Error: ' + error.message;
+      fadeStatus('Error: ' + error.message);
     }
   });
 });

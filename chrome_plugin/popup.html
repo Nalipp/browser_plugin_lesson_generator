@@ -1,35 +1,63 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>English Lesson Plan Generator</title>
+    <title>ESL-TalkPlan</title>
     <style>
       body {
         width: 300px;
-        padding: 10px;
+        padding: 10px 32px 10px 32px;
         font-family: Arial, sans-serif;
       }
+      h2 {
+        text-align: left;
+        margin-top: 0;
+      }
       button {
-        width: 100%;
+        width: 60%;
+        display: block;
+        margin: 10px 0 20px 0;
         padding: 10px;
-        background-color: #4caf50;
+        background-color: DodgerBlue;
         color: white;
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        margin-top: 10px;
+        font-size: 1em;
+        font-weight: bold;
+        text-align: center;
       }
       button:hover {
-        background-color: #45a049;
+        background-color: #187bcd;
       }
       #status {
         margin-top: 10px;
         color: #666;
+        min-height: 40px;
+        opacity: 1;
+        transition: opacity 0.6s;
+        text-align: left;
+      }
+      #progress-container {
+        width: 84%;
+        margin: 0 0 10px 0;
+        background: #eee;
+        border-radius: 4px;
+        height: 12px;
+        overflow: hidden;
+        display: none;
+      }
+      #progress-bar {
+        height: 100%;
+        width: 0%;
+        background: MediumSeaGreen;
+        transition: width 0.3s linear;
       }
     </style>
   </head>
   <body>
-    <h2>English Lesson Plan Generator</h2>
+    <h2>ESL-TalkPlan</h2>
     <button id="scrapeButton">Scrape Current Page</button>
+    <div id="progress-container"><div id="progress-bar"></div></div>
     <div id="status"></div>
     <script src="popup.js"></script>
   </body>
