@@ -13,9 +13,27 @@ def llm_coach_prompt_generator(title: str, main_content: str) -> str:
             input: the content given is a topic about the 10 best places to travel to in the world.
             output:
                 a json object with the following keys
-                    title: 
+                    title:
                         a concise title for keeping track of the lesson.
                             (title example -> "Best travel destinations")
+                    common_expresions: 
+                        THIS IS THE MOST IMPORTANT PART OF THE LESSON!
+                        MAKE SURE YOU DO NOT SKIP THIS PART PLEASE
+                        a list of 5 idioms, common expressions, phrases etc that native english speakers use that may not be covered in text books. 
+                        each common_expression should have a short description describing its meaning
+                        This should return an array of strings NOT AN OBJECT please
+                        (
+                          common_expresions example -> [
+                            "Bucket list: A list of things you want to do or experience before you die.",
+                            "Off the beaten path: A place or activity that is unusual, less known, or away from touristy areas.",
+                            "Blew my mind: Something that was incredibly surprising or impressive.",
+                            "Synergy: When combined efforts produce a greater result than working separately.",
+                            "A blessing or a curse: Something that has both good and bad effects."
+                          ]
+                        )
+                        REMEMBER TO ALWAYS INCLUDE A COMMON EXPRESSIONS PORTION PLEASE
+                        YOU SHOULD NOT PROCEED WITHOUT DOING THIS STEP EVERY TIME
+                        THE LESSON IS POINTLESS WITHOUT THE COMMON EXPRESSIONS PORTION!
                     intro:
                         an introduction the topic that we are going to be discussing.
                         THIS SHOULD BE SHORT we want to include the user as much as possible.
@@ -53,23 +71,6 @@ def llm_coach_prompt_generator(title: str, main_content: str) -> str:
                               especially for smaller companies."
                             ]
                         )
-                    common_expresions: 
-                        THIS IS THE MOST IMPORTANT PART OF THE LESSON
-                        MAKE SURE YOU DO NOT SKIP THIS PART PLEASE
-                        a list of 5 idioms, common expressions, phrases etc that native english speakers use that may not be covered in text books. 
-                        The commone_expressions should try to get the user to use these expressions and learn them through repitition as much as possible
-                        each common_expression should have a short description describing its meaning
-                        This should return an array of strings NOT AN OBJECT please
-                        (
-                          common_expresions example -> [
-                            "Bucket list: A list of things you want to do or experience before you die.",
-                            "Off the beaten path: A place or activity that is unusual, less known, or away from touristy areas.",
-                            "Blew my mind: Something that was incredibly surprising or impressive.",
-                            "Synergy: When combined efforts produce a greater result than working separately.",
-                            "A blessing or a curse: Something that has both good and bad effects."
-                          ]
-                        )
-                        REMEMBER TO ALWAYS INCLUDE A COMMON EXPRESSIONS PORTION PLEASE 
                     summary:
                         a short summary of the text, it should include key parts and can vary in lenght acording to the complexity of the topic but try to keep it as short as possible. 
                         Assume that the user has NOT ACTUALLY READ THE TEXT. This may or may not be a requirement.
