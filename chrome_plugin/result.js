@@ -3,7 +3,7 @@ function renderLessonPlan(lessonPlanObj, url) {
   let html = '';
   if (url) {
     html += `<div style="margin-bottom: 1em; font-size: 0.98em;">
-      <a href="${url}" target="_blank" rel="noopener" style="color:#1a7f5a; text-decoration:underline; font-weight:600;">Original article</a>
+      <a href="${url}" target="_blank" rel="noopener" style="color:dodgerblue; text-decoration:underline; font-weight:600;">Original article</a>
     </div>`;
   }
   if (lessonPlanObj.title) html += `<h2>${lessonPlanObj.title}</h2>`;
