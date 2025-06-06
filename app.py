@@ -1,10 +1,25 @@
 import os
-
 import openai
+import secrets
+import psycopg2
+from psycopg2.extras import RealDictCursor
+
+def get_db_connection():
+    return psycopg2.connect(
+        dbname=os.getenv("RENDER_DBNAME"),
+        user=os.getenv("RENDER_USER"),
+        password=os.getenv("RENDER_PASSWORD"),
+        host=os.getenv("RENDER_HOST"),
+        port=5432,
+        cursor_factory=RealDictCursor
+    )
+
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+
+
 
 from lesson_generator_prompts.llm_coach_prompt2 import llm_coach_prompt_generator
 
@@ -74,7 +89,7 @@ def process_content():
     prompt = llm_coach_prompt_generator(title, main_content)
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4o",
+            model="gpt-4.1-nano-2025-04-14",
             messages=[
                 {
                     "role": "system",
@@ -89,6 +104,90 @@ def process_content():
         return jsonify({"lesson_plan": lesson_plan})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/generate-key", methods=["POST"])
+def generate_key():
+    """
+    POST /api/generate-key
+    - Called after successful Stripe payment.
+    - Generates a new unique API key with a starting credit balance.
+    - Stores the key and credits in the database.
+    - Returns the new key to the user.
+    """
+
+    starting_credits = 15
+    new_key = secrets.token_urlsafe(24)
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "INSERT INTO api_keys (key, credits) VALUES (%s, %s)",
+                    (new_key, starting_credits)
+                )
+        conn.close()
+        return jsonify({"key": new_key, "credits": starting_credits})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/check-credits", methods=["POST"])
+def check_credits():
+    """
+    POST /api/check-credits
+    - Receives an API key in the request body.
+    - Looks up the key in the database.
+    - Returns the number of credits remaining for that key.
+    """
+    data = request.json
+    api_key = data.get("key")
+    if not api_key:
+        return jsonify({"error": "No key provided"}), 400
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT credits FROM api_keys WHERE key = %s", (api_key,))
+                row = cur.fetchone()
+        conn.close()
+        if row:
+            return jsonify({"credits": row["credits"]})
+        else:
+            return jsonify({"credits": -1})  # Not found
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/redeem-credit", methods=["POST"])
+def redeem_credit():
+    """
+    POST /api/redeem-credit
+    - Receives an API key in the request body.
+    - Checks if the key has credits remaining.
+    - If so, decrements the credit count by 1 and returns success.
+    - If not, returns an error indicating no credits left.
+    """
+    data = request.json
+    api_key = data.get("key")
+    if not api_key:
+        return jsonify({"error": "No key provided"}), 400
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT credits FROM api_keys WHERE key = %s FOR UPDATE", (api_key,))
+                row = cur.fetchone()
+                if not row:
+                    return jsonify({"error": "Invalid key"}), 400
+                if row["credits"] <= 0:
+                    return jsonify({"error": "No credits left"}), 402
+                cur.execute("UPDATE api_keys SET credits = credits - 1 WHERE key = %s", (api_key,))
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 
 if __name__ == "__main__":
