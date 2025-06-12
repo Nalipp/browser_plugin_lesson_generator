@@ -19,6 +19,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import stripe
+import json
 
 
 
@@ -31,7 +32,7 @@ stripe.api_key = os.getenv("STRIPE_SECRET_KEY_TEST")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
 app = Flask(__name__)
-CORS(app, origins=["chrome-extension://hmoamkjgdbnoehccpmgdmdpnfpmffbia", "https://saturday-topics-landing.onrender.com"])
+CORS(app, origins=["chrome-extension://hmoamkjgdbnoehccpmgdmdpnfpmffbia", "https://saturday-topics-landing.onrender.com", "https://browser-plugin-lesson-generator.onrender.com", "http://localhost:5001"])
 
 
 def extract_metadata_and_content(html: str):
@@ -136,17 +137,97 @@ def process_content():
 #         return jsonify({"error": str(e)}), 500
  
 
+# @app.route("/api/stripe-webhook", methods=["POST"])
+# def stripe_webhook():
+#     """
+#     - Receives webhook events from Stripe.
+#     - Verifies the event's signature to ensure authenticity.
+#     - Listens for 'checkout.session.completed' events.
+#     - When a payment is successfully completed:
+#         - Generates a new unique API key.
+#         - Assigns starting credits to the new key.
+#         - Stores the key and credits in the database.
+#     """
+#     payload = request.data
+#     sig_header = request.headers.get("stripe-signature")
+
+#     import pdb; pdb.set_trace()
+
+#     try:
+#         event = stripe.Webhook.construct_event(
+#             payload, sig_header, STRIPE_WEBHOOK_SECRET
+#         )
+#     except stripe.error.SignatureVerificationError as e:
+#         import pdb; pdb.set_trace()
+#         return jsonify({"error": "Invalid signature"}), 400
+#     except Exception as e:
+#         import pdb; pdb.set_trace()
+#         return jsonify({"error": str(e)}), 400
+
+#         import pdb; pdb.set_trace()
+#     if event['type'] == 'checkout.session.completed':
+#         session = event['data']['object']
+
+#         starting_credits = 15
+#         new_key = secrets.token_urlsafe(24)
+
+#         import pdb; pdb.set_trace()
+#         try:
+#             conn = get_db_connection()
+
+#             import pdb; pdb.set_trace()
+#             with conn:
+#                 import pdb; pdb.set_trace()
+#                 with conn.cursor() as cur:
+#                     import pdb; pdb.set_trace()
+#                     cur.execute(
+#                         "INSERT INTO api_keys (key, credits) VALUES (%s, %s)",
+#                         (new_key, starting_credits)
+#                     )
+#             conn.close()
+#             print(f"API key created: {new_key}")
+#         except Exception as e:
+#             import pdb; pdb.set_trace()
+#             return jsonify({"error": str(e)}), 500
+
+#     return jsonify({"status": "success"}), 200
+
+
+# @app.route("/api/stripe-webhook", methods=["POST"])
+# def stripe_webhook():
+#     payload = request.data
+
+#     # Skip signature verification temporarily for local debugging
+#     try:
+#         event = json.loads(payload)
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 400
+
+
+#     if event['type'] == 'checkout.session.completed':
+#         session = event['data']['object']
+
+#         starting_credits = 15
+#         new_key = secrets.token_urlsafe(24)
+
+#         try:
+#             conn = get_db_connection()
+#             with conn:
+#                 with conn.cursor() as cur:
+#                     cur.execute(
+#                         "INSERT INTO api_keys (key, credits) VALUES (%s, %s)",
+#                         (new_key, starting_credits)
+#                     )
+#             conn.close()
+#             print(f"API key created: {new_key}")
+#         except Exception as e:
+#             return jsonify({"error": str(e)}), 500
+
+#     return jsonify({"status": "success"}), 200
+
+
 @app.route("/api/stripe-webhook", methods=["POST"])
 def stripe_webhook():
-    """
-    - Receives webhook events from Stripe.
-    - Verifies the event's signature to ensure authenticity.
-    - Listens for 'checkout.session.completed' events.
-    - When a payment is successfully completed:
-        - Generates a new unique API key.
-        - Assigns starting credits to the new key.
-        - Stores the key and credits in the database.
-    """
     payload = request.data
     sig_header = request.headers.get("stripe-signature")
 
@@ -161,7 +242,6 @@ def stripe_webhook():
 
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
-
         starting_credits = 15
         new_key = secrets.token_urlsafe(24)
 
@@ -240,6 +320,7 @@ def redeem_credit():
 @app.route("/api/create-checkout-session", methods=["POST"])
 def create_checkout_session():
     try:
+        import pdb; pdb.set_trace()
         session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             mode="payment",
@@ -256,14 +337,6 @@ def create_checkout_session():
         return jsonify({"url": session.url})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-# @app.route("/api/fulfill-session", methods=["POST"])
-# def fulfill_session():
-#     import pdb; pdb.set_trace()
-#     return jsonify({"fulfill_session": "fulfill_session"})
-
-
 
 
 
