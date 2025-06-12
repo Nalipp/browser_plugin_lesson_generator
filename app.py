@@ -18,6 +18,7 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import stripe
 
 
 
@@ -25,9 +26,11 @@ from lesson_generator_prompts.llm_coach_prompt2 import llm_coach_prompt_generato
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
+# stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY_TEST")
 
 app = Flask(__name__)
-CORS(app, origins=["chrome-extension://hmoamkjgdbnoehccpmgdmdpnfpmffbia"])
+CORS(app, origins=["chrome-extension://hmoamkjgdbnoehccpmgdmdpnfpmffbia", "https://saturday-topics-landing.onrender.com"])
 
 
 def extract_metadata_and_content(html: str):
@@ -187,6 +190,36 @@ def redeem_credit():
         return jsonify({"success": True})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+
+@app.route("/api/create-checkout-session", methods=["POST"])
+def create_checkout_session():
+    try:
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            mode="payment",
+            line_items=[
+                {
+                    # "price": "price_1RXtNjHfMuGDLClYU8IlawNh", # production id
+                    "price": "price_1RYyy6HfMuGDLClY7CLTuFb2", # test id
+                    "quantity": 1,
+                }
+            ],
+            success_url="https://saturday-topics-landing.onrender.com/success?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url="https://saturday-topics-landing.onrender.com/cancel",
+        )
+        return jsonify({"url": session.url})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/fulfill-session", methods=["POST"])
+def fulfill_session():
+    import pdb; pdb.set_trace()
+    return jsonify({"fulfill_session": "fulfill_session"})
+
+
 
 
 

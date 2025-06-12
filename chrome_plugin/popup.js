@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
-
-  const REQUEST_URL = 'http://localhost:5001/api/process-content'; // DEV
+  const REQUEST_URL = 'http://localhost:5001/api/'; // DEV
   // const REQUEST_URL = 'https://browser-plugin-lesson-generator.onrender.com/api/process-content'; // PROD
     
   const scrapeButton = document.getElementById('scrapeButton');
   const statusDiv = document.getElementById('status');
   const progressContainer = document.getElementById('progress-container');
   const progressBar = document.getElementById('progress-bar');
+  const buyButton = document.getElementById("buy-button")
 
   const instructions = [
     'Please stay on this browser tab while we generate your lesson',
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const sendToBackend = async (content) => {
     try {
       const response = await fetch(
-        REQUEST_URL,
+        REQUEST_URL + 'process-content',
         {
           method: 'POST',
           headers: {
@@ -162,10 +162,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  document.getElementById('print-btn').addEventListener('click', () => {
-    window.open(chrome.runtime.getURL('print.html'), '_blank');
+  buyButton.addEventListener("click", () => {
+    chrome.runtime.sendMessage({ action: "startCheckout" });
   });
+
+  // DOMContentLoaded outer function end
 });
+
 
 function scrapePageContent() {
   const cleanText = (text) => {

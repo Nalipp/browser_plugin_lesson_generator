@@ -4,6 +4,9 @@
   "version": "1.0",
   "description": "Scrape web content and generate English lesson plans",
   "permissions": ["activeTab", "storage", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
     "default_popup": "popup.html"
   }
