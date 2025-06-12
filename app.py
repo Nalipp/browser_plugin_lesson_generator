@@ -320,7 +320,6 @@ def redeem_credit():
 @app.route("/api/create-checkout-session", methods=["POST"])
 def create_checkout_session():
     try:
-        import pdb; pdb.set_trace()
         session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             mode="payment",
