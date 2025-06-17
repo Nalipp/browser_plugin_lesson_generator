@@ -29,7 +29,8 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 # stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY_TEST")
-STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+# STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET_TEST")
 
 app = Flask(__name__)
 CORS(app, origins=["chrome-extension://hmoamkjgdbnoehccpmgdmdpnfpmffbia", "https://saturday-topics-landing.onrender.com", "https://browser-plugin-lesson-generator.onrender.com", "http://localhost:5001"])
@@ -109,121 +110,6 @@ def process_content():
         return jsonify({"lesson_plan": lesson_plan})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
-# @app.route("/api/generate-key", methods=["POST"])
-# def generate_key():
-#     """
-#     POST /api/generate-key
-#     - Called after successful Stripe payment.
-#     - Generates a new unique API key with a starting credit balance.
-#     - Stores the key and credits in the database.
-#     - Returns the new key to the user.
-#     """
-
-#     starting_credits = 15
-#     new_key = secrets.token_urlsafe(24)
-#     try:
-#         conn = get_db_connection()
-#         with conn:
-#             with conn.cursor() as cur:
-#                 cur.execute(
-#                     "INSERT INTO api_keys (key, credits) VALUES (%s, %s)",
-#                     (new_key, starting_credits)
-#                 )
-#         conn.close()
-#         return jsonify({"key": new_key, "credits": starting_credits})
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
- 
-
-# @app.route("/api/stripe-webhook", methods=["POST"])
-# def stripe_webhook():
-#     """
-#     - Receives webhook events from Stripe.
-#     - Verifies the event's signature to ensure authenticity.
-#     - Listens for 'checkout.session.completed' events.
-#     - When a payment is successfully completed:
-#         - Generates a new unique API key.
-#         - Assigns starting credits to the new key.
-#         - Stores the key and credits in the database.
-#     """
-#     payload = request.data
-#     sig_header = request.headers.get("stripe-signature")
-
-#     import pdb; pdb.set_trace()
-
-#     try:
-#         event = stripe.Webhook.construct_event(
-#             payload, sig_header, STRIPE_WEBHOOK_SECRET
-#         )
-#     except stripe.error.SignatureVerificationError as e:
-#         import pdb; pdb.set_trace()
-#         return jsonify({"error": "Invalid signature"}), 400
-#     except Exception as e:
-#         import pdb; pdb.set_trace()
-#         return jsonify({"error": str(e)}), 400
-
-#         import pdb; pdb.set_trace()
-#     if event['type'] == 'checkout.session.completed':
-#         session = event['data']['object']
-
-#         starting_credits = 15
-#         new_key = secrets.token_urlsafe(24)
-
-#         import pdb; pdb.set_trace()
-#         try:
-#             conn = get_db_connection()
-
-#             import pdb; pdb.set_trace()
-#             with conn:
-#                 import pdb; pdb.set_trace()
-#                 with conn.cursor() as cur:
-#                     import pdb; pdb.set_trace()
-#                     cur.execute(
-#                         "INSERT INTO api_keys (key, credits) VALUES (%s, %s)",
-#                         (new_key, starting_credits)
-#                     )
-#             conn.close()
-#             print(f"API key created: {new_key}")
-#         except Exception as e:
-#             import pdb; pdb.set_trace()
-#             return jsonify({"error": str(e)}), 500
-
-#     return jsonify({"status": "success"}), 200
-
-
-# @app.route("/api/stripe-webhook", methods=["POST"])
-# def stripe_webhook():
-#     payload = request.data
-
-#     # Skip signature verification temporarily for local debugging
-#     try:
-#         event = json.loads(payload)
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 400
-
-
-#     if event['type'] == 'checkout.session.completed':
-#         session = event['data']['object']
-
-#         starting_credits = 15
-#         new_key = secrets.token_urlsafe(24)
-
-#         try:
-#             conn = get_db_connection()
-#             with conn:
-#                 with conn.cursor() as cur:
-#                     cur.execute(
-#                         "INSERT INTO api_keys (key, credits) VALUES (%s, %s)",
-#                         (new_key, starting_credits)
-#                     )
-#             conn.close()
-#             print(f"API key created: {new_key}")
-#         except Exception as e:
-#             return jsonify({"error": str(e)}), 500
-
-#     return jsonify({"status": "success"}), 200
 
 
 @app.route("/api/stripe-webhook", methods=["POST"])
