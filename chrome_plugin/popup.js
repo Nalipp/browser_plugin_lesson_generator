@@ -6,7 +6,25 @@ document.addEventListener('DOMContentLoaded', function () {
   const statusDiv = document.getElementById('status');
   const progressContainer = document.getElementById('progress-container');
   const progressBar = document.getElementById('progress-bar');
-  const buyButton = document.getElementById("buy-button")
+  const buyButton = document.getElementById("buy-button");
+  const apiKeyContainer = document.getElementById('apiKeyContainer');
+  const apiKeyElement = document.getElementById('apiKey');
+  const copyKeyButton = document.getElementById('copyKeyButton');
+
+  chrome.storage.local.get('apiKey', ({ apiKey }) => {
+    if (apiKey) {
+      apiKeyElement.textContent = apiKey;
+      apiKeyContainer.style.display = 'block';
+    }
+  });
+
+  copyKeyButton.addEventListener('click', () => {
+    if (apiKeyElement.textContent) {
+      navigator.clipboard.writeText(apiKeyElement.textContent).then(() => {
+        alert('API key copied to clipboard!');
+      });
+    }
+  });
 
   const instructions = [
     'Please stay on this browser tab while we generate your lesson',
@@ -32,6 +50,24 @@ document.addEventListener('DOMContentLoaded', function () {
     { percent: 85, time: 18000 },
     { percent: PROGRESS_MAX, time: PROGRESS_DURATION }
   ];
+
+  // Attempt to read stored key from localStorage on the success page
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tab = tabs[0];
+    if (tab && tab.url.includes('success')) {
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: () => localStorage.getItem('apiKey'),
+      }, (results) => {
+        const key = results?.[0]?.result;
+        if (key) {
+          chrome.storage.local.set({ apiKey: key }, () => {
+            console.log("Stored API key from success page");
+          });
+        }
+      });
+    }
+  });
 
   const fadeStatus = (text, callback) => {
     statusDiv.style.opacity = 0;

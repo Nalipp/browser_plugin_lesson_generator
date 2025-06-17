@@ -128,6 +128,7 @@ def stripe_webhook():
 
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
+        session_id = session.get("id")
         starting_credits = 15
         new_key = secrets.token_urlsafe(24)
 
@@ -136,11 +137,10 @@ def stripe_webhook():
             with conn:
                 with conn.cursor() as cur:
                     cur.execute(
-                        "INSERT INTO api_keys (key, credits) VALUES (%s, %s)",
-                        (new_key, starting_credits)
+                        "INSERT INTO api_keys (key, credits, session_id) VALUES (%s, %s, %s)",
+                        (new_key, starting_credits, session_id)
                     )
             conn.close()
-            print(f"API key created: {new_key}")
         except Exception as e:
             return jsonify({"error": str(e)}), 500
 
@@ -169,6 +169,34 @@ def check_credits():
             return jsonify({"credits": row["credits"]})
         else:
             return jsonify({"credits": -1})  # Not found
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/get-api-key", methods=["POST"])
+def get_api_key():
+    """
+    - Receives a Stripe session_id in the request body.
+    - Looks up the API key associated with that session_id in the database.
+    - Returns the API key if found.
+    """
+    data = request.json
+    session_id = data.get("session_id")
+    if not session_id:
+        return jsonify({"error": "No session_id provided"}), 400
+
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT key FROM api_keys WHERE session_id = %s", (session_id,))
+                row = cur.fetchone()
+        conn.close()
+
+        if row:
+            return jsonify({"key": row["key"]})
+        else:
+            return jsonify({"key": None})  # Not found
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
