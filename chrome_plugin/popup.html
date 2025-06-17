@@ -5,18 +5,14 @@
     <style>
       body {
         width: 300px;
-        padding: 10px 32px 10px 32px;
+        padding: 10px 16px;
         font-family: Arial, sans-serif;
       }
-      h2 {
-        text-align: left;
-        margin-top: 0;
+      h2, h5 {
+        margin: 0;
+        padding: 0;
       }
       button {
-        width: 60%;
-        display: block;
-        margin: 10px 0 20px 0;
-        padding: 10px;
         background-color: DodgerBlue;
         color: white;
         border: none;
@@ -29,6 +25,17 @@
       button:hover {
         background-color: #187bcd;
       }
+      #scrapeButton {
+        padding: 10px;
+        width: 60%;
+        margin-top: 10px;
+      }
+      #buy-button {
+        display: none;
+        padding: 10px;
+        width: 60%;
+        margin-top: 10px;
+      }
       #status {
         margin-top: 10px;
         color: #666;
@@ -38,8 +45,8 @@
         text-align: left;
       }
       #progress-container {
-        width: 84%;
-        margin: 0 0 10px 0;
+        width: 100%;
+        margin: 10px 0;
         background: #eee;
         border-radius: 4px;
         height: 12px;
@@ -52,33 +59,134 @@
         background: MediumSeaGreen;
         transition: width 0.3s linear;
       }
+      #freeLessonsDropdown {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        z-index: 1000;
+        font-size: 0.9em;
+        width: max-content;
+      }
+      #freeLessonsDropdown a {
+        display: block;
+        padding: 4px 8px;
+        color: #333;
+        text-decoration: none;
+      }
+      #freeLessonsDropdown a:hover {
+        background-color: #f0f0f0;
+      }
+      #creditInfo {
+        font-size: 0.9em;
+        margin-left: 8px;
+        color: #333;
+        white-space: nowrap;
+      }
+      #tooltip {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        line-height: 10px;
+        text-align: center;
+        border-radius: 50%;
+        border: 1px solid #ccc;
+        background: white;
+        color: #555;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 0.7em;
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        z-index: 10;
+      }
+      #tooltip-popup {
+        display: none;
+        position: absolute;
+        top: -50px;
+        right: 0;
+        background: #222;
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 0.85em;
+        white-space: pre-line;
+        z-index: 1001;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        max-width: 220px;
+      }
+      #tooltip:hover + #tooltip-popup, #tooltip:focus + #tooltip-popup {
+        display: block;
+      }
+      #apiKeyContainer {
+        margin-top: 1em;
+        display: none;
+        align-items: center;
+        gap: 6px;
+      }
+      #apiKeyInput {
+        flex: 1;
+        padding: 6px;
+        font-size: 0.9em;
+        border: 1px solid #aaa;
+        border-radius: 4px;
+        color: #333;
+        background-color: #fff;
+        box-sizing: border-box;
+      }
+      #submitApiKey {
+        padding: 4px 10px;
+        font-size: 0.8em;
+        height: 20px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
-    <h2>Saturday-topics</h2>
-    <h5>Focus:speaking</h5>
-    <button id="scrapeButton">Generate lesson</button>
-    <h4>Navigate to the webpage that you want to choose for your lesson plan</h4>
-    <button id="buy-button">Buy API Key</button>
-    <div id="progress-container"><div id="progress-bar"></div></div>
-    <div id="status"></div>
-    <script src="popup.js"></script>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2>Saturday-topics</h2>
+        <h5>Focus: speaking</h5>
+      </div>
+      <div style="position: relative;">
+        <button id="freeLessonsBtn" style="font-size: 0.7em; padding: 4px 8px; margin-left: 8px;">
+          Free lessons
+        </button>
+        <div id="freeLessonsDropdown">
+          <a href="https://www.google.com" target="_blank">Bali travel</a>
+          <a href="https://www.espn.com" target="_blank">Italian cuisine</a>
+          <a href="https://www.yahoo.com" target="_blank">Finding a hobby</a>
+        </div>
+      </div>
+    </div>
 
-    <div id="apiKeyContainer" style="margin-top: 1em;">
-      <label for="apiKeyInput"><strong>Your API Key:</strong></label><br />
+    <div style="display: flex; align-items: center; margin-top: 12px; gap: 8px;">
+      <button id="scrapeButton" style="display: none;">Generate lesson</button>
+      <button id="buy-button" style="display: none;">Buy credits</button>
+      <h1 id="creditInfo" style="font-size: 1.5em; margin: 0;"></h1>
+      <span id="tooltip" tabindex="0" style="cursor: help;">&#63;</span>
+
+    </div>
+
+    <button id="buy-button">Buy credits</button>
+
+    <div id="apiKeyContainer">
       <input
         type="text"
         id="apiKeyInput"
-        style="width: 100%; padding: 6px; font-size: 1em; box-sizing: border-box;"
-        placeholder="Paste your secret key here"
+        placeholder="Recovery code"
       />
-      <button
-        id="submitApiKey"
-        style="margin-top: 0.5em; padding: 6px 12px; font-size: 1em; cursor: pointer;"
-      >
-        Submit
-      </button>
+      <button id="submitApiKey">Submit</button>
     </div>
 
+    <div id="progress-container"><div id="progress-bar"></div></div>
+    <div id="status"></div>
+
+    <script src="popup.js"></script>
   </body>
 </html>
