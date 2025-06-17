@@ -240,7 +240,7 @@ def create_checkout_session():
             line_items=[
                 {
                     # "price": "price_1RXtNjHfMuGDLClYU8IlawNh", # production id
-                    "price": "price_1RYyy6HfMuGDLClY7CLTuFb2", # test id
+                    "price": "price_1Rb7FCHfMuGDLClYhWwvtgAz", # test id
                     "quantity": 1,
                 }
             ],

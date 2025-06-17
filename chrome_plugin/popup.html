@@ -86,47 +86,13 @@
         color: #333;
         white-space: nowrap;
       }
-      #tooltip {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        line-height: 10px;
-        text-align: center;
-        border-radius: 50%;
-        border: 1px solid #ccc;
-        background: white;
-        color: #555;
-        font-weight: bold;
-        cursor: pointer;
-        font-size: 0.7em;
-        position: absolute;
-        top: -12px;
-        right: -12px;
-        z-index: 10;
-      }
-      #tooltip-popup {
-        display: none;
-        position: absolute;
-        top: -50px;
-        right: 0;
-        background: #222;
-        color: #fff;
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-size: 0.85em;
-        white-space: pre-line;
-        z-index: 1001;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        max-width: 220px;
-      }
-      #tooltip:hover + #tooltip-popup, #tooltip:focus + #tooltip-popup {
-        display: block;
-      }
       #apiKeyContainer {
         margin-top: 1em;
         display: none;
         align-items: center;
         gap: 6px;
+        max-width: 85%;
+        margin-top: 2em;
       }
       #apiKeyInput {
         flex: 1;
@@ -137,6 +103,7 @@
         color: #333;
         background-color: #fff;
         box-sizing: border-box;
+        height: 2em;
       }
       #submitApiKey {
         padding: 4px 10px;
@@ -144,6 +111,39 @@
         height: 20px;
         border-radius: 4px;
         cursor: pointer;
+      }
+      #tooltip {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 1.5em;
+        height: 1.5em;
+        font-size: 0.9em;
+        border-radius: 50%;
+        background-color: transparent;
+        border: 1px solid #555;
+        color: #555;
+        cursor: help;
+        position: relative;
+        top: 1.5em;
+      }
+      #tooltip-popup {
+        display: none;
+        position: absolute;
+        top: 180%;
+        left: 0;
+        width: 120px;
+        background-color: #333;
+        color: #fff;
+        font-size: 0.8em;
+        padding: 8px;
+        border-radius: 4px;
+        z-index: 100;
+        box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+      }
+      #tooltip:hover + #tooltip-popup,
+      #tooltip:focus + #tooltip-popup {
+        display: block;
       }
     </style>
   </head>
@@ -153,6 +153,14 @@
         <h2>Saturday-topics</h2>
         <h5>Focus: speaking</h5>
       </div>
+
+      <div style="position: relative; margin-bottom: 2.2em">
+        <span id="tooltip" tabindex="0">&#63;</span>
+        <div id="tooltip-popup">
+          Navigate to the webpage you'd like to turn into a lesson - or choose from our free lesson examples
+        </div>
+      </div>
+
       <div style="position: relative;">
         <button id="freeLessonsBtn" style="font-size: 0.7em; padding: 4px 8px; margin-left: 8px;">
           Free lessons
@@ -165,15 +173,11 @@
       </div>
     </div>
 
-    <div style="display: flex; align-items: center; margin-top: 12px; gap: 8px;">
-      <button id="scrapeButton" style="display: none;">Generate lesson</button>
-      <button id="buy-button" style="display: none;">Buy credits</button>
+    <div style="display: flex; align-items: center; margin-top: 3em; gap: 2.5em;">
+      <button id="scrapeButton" style="display: none; width: 12em;">Generate lesson</button>
+      <button id="buy-button" style="display: none; width: 12em;">Buy credits</button>
       <h1 id="creditInfo" style="font-size: 1.5em; margin: 0;"></h1>
-      <span id="tooltip" tabindex="0" style="cursor: help;">&#63;</span>
-
     </div>
-
-    <button id="buy-button">Buy credits</button>
 
     <div id="apiKeyContainer">
       <input

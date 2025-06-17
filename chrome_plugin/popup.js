@@ -12,8 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const freeLessonsDropdown = document.getElementById('freeLessonsDropdown');
   const creditInfo = document.getElementById('creditInfo');
   const apiKeyContainer = document.getElementById('apiKeyContainer');
-  const tooltip = document.getElementById('tooltip');
-  const tooltipPopup = document.getElementById('tooltip-popup');
 
   chrome.storage.local.get('apiKey', ({ apiKey }) => {
     if (apiKey && apiKeyInput) apiKeyInput.value = apiKey;
@@ -219,21 +217,6 @@ document.addEventListener('DOMContentLoaded', function () {
       apiKeyContainer.style.display = 'none';
     }
   });
-
-  if (tooltip && tooltipPopup) {
-    tooltip.addEventListener('focus', () => {
-      tooltipPopup.style.display = 'block';
-    });
-    tooltip.addEventListener('blur', () => {
-      tooltipPopup.style.display = 'none';
-    });
-    tooltip.addEventListener('mouseenter', () => {
-      tooltipPopup.style.display = 'block';
-    });
-    tooltip.addEventListener('mouseleave', () => {
-      tooltipPopup.style.display = 'none';
-    });
-  }
 });
 
 function scrapePageContent() {
