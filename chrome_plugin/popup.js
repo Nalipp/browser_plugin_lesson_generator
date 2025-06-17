@@ -7,22 +7,15 @@ document.addEventListener('DOMContentLoaded', function () {
   const progressContainer = document.getElementById('progress-container');
   const progressBar = document.getElementById('progress-bar');
   const buyButton = document.getElementById("buy-button");
-  const apiKeyContainer = document.getElementById('apiKeyContainer');
-  const apiKeyElement = document.getElementById('apiKey');
-  const copyKeyButton = document.getElementById('copyKeyButton');
+  const apiKeyInput = document.getElementById('apiKeyInput');
 
-  chrome.storage.local.get('apiKey', ({ apiKey }) => {
-    if (apiKey) {
-      apiKeyElement.textContent = apiKey;
-      apiKeyContainer.style.display = 'block';
-    }
+  apiKeyInput.addEventListener('input', () => {
+    chrome.storage.local.set({ apiKey: apiKeyInput.value });
   });
 
-  copyKeyButton.addEventListener('click', () => {
-    if (apiKeyElement.textContent) {
-      navigator.clipboard.writeText(apiKeyElement.textContent).then(() => {
-        alert('API key copied to clipboard!');
-      });
+  chrome.storage.local.get('apiKey', ({ apiKey }) => {
+    if (apiKey && apiKeyInput) {
+      apiKeyInput.value = apiKey;
     }
   });
 

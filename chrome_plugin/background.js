@@ -14,3 +14,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
+chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+  if (message.action === "storeApiKey" && message.key) {
+    chrome.storage.local.set({ apiKey: message.key }, () => {
+      console.log("API key stored");
+      sendResponse({ status: "success" });
+    });
+    return true;
+  }
+});
