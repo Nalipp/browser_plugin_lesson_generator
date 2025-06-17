@@ -5,7 +5,10 @@
   "description": "Scrape web content and generate English lesson plans",
   "permissions": ["activeTab", "storage", "scripting"],
   "externally_connectable": {
-    "matches": ["https://browser-plugin-lesson-generator.onrender.com/*"]
+    "matches": [
+      "https://browser-plugin-lesson-generator.onrender.com/*",
+      "https://saturday-topics-landing.onrender.com/*"
+    ]
   },
   "background": {
     "service_worker": "background.js"
