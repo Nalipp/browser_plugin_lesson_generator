@@ -147,32 +147,6 @@ def stripe_webhook():
     return jsonify({"status": "success"}), 200
 
 
-@app.route("/api/check-credits", methods=["POST"])
-def check_credits():
-    """
-    - Receives an API key in the request body.
-    - Looks up the key in the database.
-    - Returns the number of credits remaining for that key.
-    """
-    data = request.json
-    api_key = data.get("key")
-    if not api_key:
-        return jsonify({"error": "No key provided"}), 400
-    try:
-        conn = get_db_connection()
-        with conn:
-            with conn.cursor() as cur:
-                cur.execute("SELECT credits FROM api_keys WHERE key = %s", (api_key,))
-                row = cur.fetchone()
-        conn.close()
-        if row:
-            return jsonify({"credits": row["credits"]})
-        else:
-            return jsonify({"credits": -1})  # Not found
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
 @app.route("/api/get-api-key", methods=["POST"])
 def get_api_key():
     """
@@ -197,6 +171,32 @@ def get_api_key():
             return jsonify({"key": row["key"]})
         else:
             return jsonify({"key": None})  # Not found
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/check-credits", methods=["POST"])
+def check_credits():
+    """
+    - Receives an API key in the request body.
+    - Looks up the key in the database.
+    - Returns the number of credits remaining for that key.
+    """
+    data = request.json
+    api_key = data.get("key")
+    if not api_key:
+        return jsonify({"error": "No key provided"}), 400
+    try:
+        conn = get_db_connection()
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT credits FROM api_keys WHERE key = %s", (api_key,))
+                row = cur.fetchone()
+        conn.close()
+        if row:
+            return jsonify({"credits": row["credits"]})
+        else:
+            return jsonify({"credits": -1})  # Not found
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
