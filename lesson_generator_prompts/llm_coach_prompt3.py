@@ -47,6 +47,12 @@ These should reflect **natural, everyday speech**, not academic textbook phrases
 "Adjust your sleep schedule: Change the times you go to bed and wake up to match a desired routine."  
 "Sleep hygiene: Habits and practices that promote good quality sleep."
 
+
+### Notes on Summary
+Provide a brief, clear summary of the lesson content and discussion points that does NOT assume the listener has read or seen the article.
+Avoid phrases like “as mentioned earlier,” “in the article,” or “you read about…”
+Make it standalone, easy to understand, and motivating for learners who only hear this summary.
+
 ---
 
 ### Expected JSON Format:
@@ -84,4 +90,5 @@ These should reflect **natural, everyday speech**, not academic textbook phrases
   ],
   "summary": "..."
 }}
+
 """

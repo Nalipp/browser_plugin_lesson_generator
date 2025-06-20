@@ -255,7 +255,8 @@ document.addEventListener('DOMContentLoaded', function () {
         function: scrapePageContent,
       });
 
-      const scrapedContent = results[0].result;
+      const scrapedContent = results[0].result
+      scrapedContent.mainContent = scrapedContent.mainContent.slice(0, 800);
 
       await chrome.storage.local.set({
         scrapedContent,
