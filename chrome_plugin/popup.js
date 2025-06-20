@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const REQUEST_URL = 'https://browser-plugin-lesson-generator.onrender.com/api/';
-  // const REQUEST_URL = 'http://localhost:5001/api/';
+  // const REQUEST_URL = 'https://browser-plugin-lesson-generator.onrender.com/api/';
+  const REQUEST_URL = 'http://localhost:5001/api/';
 
   const generateBtn = document.getElementById('generateBtn');
   const statusDiv = document.getElementById('status');

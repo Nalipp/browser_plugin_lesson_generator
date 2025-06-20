@@ -13,6 +13,11 @@ function renderLessonPlan(lessonPlanObj, url) {
     html += `<p><strong>Summary:</strong> ${lessonPlanObj.summary}</p>`;
   if (lessonPlanObj.initial_question)
     html += `<p><strong>Initial Question:</strong> ${lessonPlanObj.initial_question}</p>`;
+  if (lessonPlanObj.common_expressions) {
+    html += '<h3>Common Expressions</h3><ul>';
+    lessonPlanObj.common_expressions.forEach((e) => (html += `<li>${e}</li>`));
+    html += '</ul>';
+  }
   if (lessonPlanObj.questions) {
     html += '<h3>Questions</h3><ul>';
     lessonPlanObj.questions.forEach((q) => (html += `<li>${q}</li>`));
@@ -23,11 +28,6 @@ function renderLessonPlan(lessonPlanObj, url) {
     lessonPlanObj.more_substantial_discussion_topics.forEach(
       (t) => (html += `<li>${t}</li>`)
     );
-    html += '</ul>';
-  }
-  if (lessonPlanObj.common_expressions) {
-    html += '<h3>Common Expressions</h3><ul>';
-    lessonPlanObj.common_expressions.forEach((e) => (html += `<li>${e}</li>`));
     html += '</ul>';
   }
   return html;

@@ -23,7 +23,7 @@ import json
 
 
 
-from lesson_generator_prompts.llm_coach_prompt2 import llm_coach_prompt_generator
+from lesson_generator_prompts.llm_coach_prompt3 import llm_coach_prompt_generator
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -93,9 +93,11 @@ def process_content():
     title = content["metadata"]["title"]
     main_content = content["mainContent"]
     prompt = llm_coach_prompt_generator(title, main_content)
+
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4.1-nano-2025-04-14",
+            # model="gpt-4.1-nano-2025-04-14",
+            model="gpt-4.1-2025-04-14",
             messages=[
                 {
                     "role": "system",
