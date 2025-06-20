@@ -60,7 +60,7 @@ Make it standalone, easy to understand, and motivating for learners who only hea
 ### Expected JSON Format:
 
 {{
-  "title": "...",
+  "title": "...", #note this should not start with Talking about... just leave that off for a shorter title
   "common_expressions": [
     "...",
     "...",
