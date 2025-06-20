@@ -50,7 +50,9 @@ These should reflect **natural, everyday speech**, not academic textbook phrases
 
 ### Notes on Summary
 Provide a brief, clear summary of the lesson content and discussion points that does NOT assume the listener has read or seen the article.
-Avoid phrases like “as mentioned earlier,” “in the article,” or “you read about…”
+Avoid phrases like “as mentioned earlier,” “in the article,” or “you read about…”, “Today, you practiced talking...” "we also disscussed..."
+There should be no past tense
+It should just be a summary of the article
 Make it standalone, easy to understand, and motivating for learners who only hear this summary.
 
 ---

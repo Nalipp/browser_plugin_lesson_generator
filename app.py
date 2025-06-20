@@ -27,10 +27,10 @@ from lesson_generator_prompts.llm_coach_prompt3 import llm_coach_prompt_generato
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
-# stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
-stripe.api_key = os.getenv("STRIPE_SECRET_KEY_TEST")
-# STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
-STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET_TEST")
+stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
+# stripe.api_key = os.getenv("STRIPE_SECRET_KEY_TEST")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+# STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET_TEST")
 
 app = Flask(__name__)
 CORS(app, origins=["chrome-extension://hmoamkjgdbnoehccpmgdmdpnfpmffbia", "https://saturday-topics-landing.onrender.com", "https://browser-plugin-lesson-generator.onrender.com", "http://localhost:5001"])
@@ -241,8 +241,8 @@ def create_checkout_session():
             mode="payment",
             line_items=[
                 {
-                    # "price": "price_1RXtNjHfMuGDLClYU8IlawNh", # production id
-                    "price": "price_1Rb7FCHfMuGDLClYhWwvtgAz", # test id
+                    "price": "price_1RcEQXHfMuGDLClYzHcOPtG9", # production id
+                    # "price": "price_1Rb7FCHfMuGDLClYhWwvtgAz", # test id
                     "quantity": 1,
                 }
             ],

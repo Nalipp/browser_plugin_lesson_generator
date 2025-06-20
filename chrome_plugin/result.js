@@ -14,9 +14,8 @@ function renderLessonPlan(lessonPlanObj, url) {
   if (lessonPlanObj.initial_question)
     html += `<p><strong>Initial Question:</strong> ${lessonPlanObj.initial_question}</p>`;
   if (lessonPlanObj.common_expressions) {
-    html += '<h3>Common Expressions</h3><ul>';
-    lessonPlanObj.common_expressions.forEach((e) => (html += `<li>${e}</li>`));
-    html += '</ul>';
+    html += '<h3>Common Expressions</h3>';
+    lessonPlanObj.common_expressions.forEach((e) => (html += `<p class="common-expression">${e}</p>`));
   }
   if (lessonPlanObj.questions) {
     html += '<h3>Questions</h3><ul>';

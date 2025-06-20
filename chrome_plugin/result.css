@@ -41,6 +41,9 @@ p {
   margin: 0.7em 0;
   line-height: 1.7;
 }
+.common-expression {
+  margin: 0 2em;
+}
 .btn {
   display: inline-block;
   color: #fff;
